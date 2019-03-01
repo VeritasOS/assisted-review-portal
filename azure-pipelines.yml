@@ -18,34 +18,34 @@ steps:
 - script: |
     npm install
     npm run build
-  workingDirectory: 'arp-client'
+  workingDirectory: 'arp-uploader'
   displayName: 'npm install and build'
 
 - script: |
     npm run testWithCoverage
-  workingDirectory: 'arp-client'
+  workingDirectory: 'arp-uploader'
   displayName: 'npm testWithCoverage'
 
 - script: |
     npm publish --dry-run
-  workingDirectory: 'arp-client'
+  workingDirectory: 'arp-uploader'
   displayName: 'npm publish --dry-run'
 
 - task: PublishTestResults@2
   condition: succeededOrFailed()
   inputs:
     testRunner: JUnit
-    testResultsFiles: 'arp-client/junitresults.xml'
+    testResultsFiles: 'arp-uploader/junitresults.xml'
 
 - task: PublishCodeCoverageResults@1
   inputs: 
     codeCoverageTool: Cobertura
-    summaryFileLocation: '$(System.DefaultWorkingDirectory)/arp-client/coverage/cobertura-coverage.xml'
-    reportDirectory: '$(System.DefaultWorkingDirectory)/arp-client/coverage'
+    summaryFileLocation: '$(System.DefaultWorkingDirectory)/arp-uploader/coverage/cobertura-coverage.xml'
+    reportDirectory: '$(System.DefaultWorkingDirectory)/arp-uploader/coverage'
 
 - task: Npm@1
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:
     command: publish
     publishEndpoint: 'npmjs'
-    workingDir: 'arp-client'
+    workingDir: 'arp-uploader'
