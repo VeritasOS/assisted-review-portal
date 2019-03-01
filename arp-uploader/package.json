@@ -1,0 +1,51 @@
+{
+	"name": "arp-uploader",
+	"version": "1.1.11",
+	"main": "built/lib/lib.js",
+	"module": "built/lib/lib.js",
+	"scripts": {
+		"build": "webpack --config webpack.config.js",
+		"start": "node built/arp/arp-cli.js",
+		"test": "jasmine-ts --config=jasmine.json",
+		"testWithCoverage": "nyc -r cobertura -e .ts -x \"*.test.ts\" jasmine-ts --config=jasmine.json && nyc report -r cobertura"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://stash.veritas.com/scm/glob/glob-auto-libraries.git"
+	},
+	"keywords": [
+		"g11n",
+		"automation"
+	],
+	"contributors": [
+		"Adrian O'Sullivan <adrian.osullivan@veritas.com>",
+		"Andrzej Poblocki <andrzej.poblocki@veritas.com>"
+	],
+	"bin": {
+		"arp-upload": "bin/uploader"
+	},
+	"dependencies": {
+		"optimist": "^0.6.1",
+		"typed-rest-client": "^1.1.2"
+	},
+	"devDependencies": {
+		"@types/jasmine": "^3.3.9",
+		"@types/jasminewd2": "^2.0.6",
+		"@types/node": "^11.9.6",
+		"@types/optimist": "0.0.29",
+		"dts-bundle-webpack": "^1.0.2",
+		"jasmine": "^3.3.1",
+		"jasmine-reporters": "^2.3.2",
+		"jasmine-ts": "^0.3.0",
+		"nyc": "^13.3.0",
+		"ts-loader": "^5.3.3",
+		"ts-node": "^8.0.2",
+		"typescript": "^3.3.3333",
+		"webpack": "^4.29.6",
+		"webpack-cli": "^3.2.3",
+		"webpack-node-externals": "^1.7.2"
+	},
+	"engines": {
+		"node": ">=6.9.x"
+	}
+}

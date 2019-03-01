@@ -1,0 +1,12 @@
+*.js.map
+/screenshots
+/node_modules
+/coverage
+/built
+/builtspecs
+/lib
+test*.bat
+arp-*.tgz
+.DS_Store
+.nyc_output
+junitresults.xml

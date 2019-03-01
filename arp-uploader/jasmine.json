@@ -1,0 +1,14 @@
+{
+   "reporters": [
+   {
+     "name": "jasmine-reporters#JUnitXmlReporter",
+     "options": {
+       "displayStacktrace": "all"
+     }
+   }
+   ],
+   "spec_dir": "tests",
+   "spec_files": [
+      "**/*[tT]est.ts"
+   ]
+}
