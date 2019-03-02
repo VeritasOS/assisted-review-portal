@@ -43,9 +43,9 @@ steps:
     summaryFileLocation: '$(System.DefaultWorkingDirectory)/arp-uploader/coverage/cobertura-coverage.xml'
     reportDirectory: '$(System.DefaultWorkingDirectory)/arp-uploader/coverage'
 
-- task: Npm@1
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-  inputs:
-    command: publish
-    publishEndpoint: 'npmjs'
-    workingDir: 'arp-uploader'
+#- task: Npm@1
+#  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+#  inputs:
+#    command: publish
+#    publishEndpoint: 'npmjs'
+#    workingDir: 'arp-uploader'
