@@ -1,0 +1,27 @@
+.garbOverlay {
+	border: 0px solid red;
+	z-index: 9999;
+	opacity: .5;
+}
+
+.garbImage {
+	position: absolute;
+	top: 0;
+	left: 0;
+	overflow: hidden;
+}
+.vdl-slide-toggle {
+float:left;
+}
+
+.garbImageContainer {
+	position: relative;
+}
+
+.zoomicon {
+	cursor: zoom-in;
+}
+
+.container {
+	width: 98%;
+}

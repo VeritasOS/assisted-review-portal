@@ -1,0 +1,82 @@
+<vdl-top-bar>
+  <vdl-icon vdl-top-bar-logo
+            svgIcon="simple-globe"></vdl-icon>
+  <vdl-top-bar-title>Assisted Review Portal</vdl-top-bar-title>
+
+  <!--
+  <div class="search-container">
+    <vdl-input-container [hiddenSearch]="searchHidden" [iconSearch]="true" (searchClick)="searchClick()">
+      <div *ngIf="input?.value" class="vdl-permanent-placeholder">-->
+  <!-- These two spans need to be next to each other otherwise a little gap between placeholder and search appears -->
+  <!--<span class="vdl-autocomplete-placeholder">{{input?.value }}</span><span class="vdl-autocomplete-search">{{inputTypeahead}}</span>
+      </div>
+      <div *ngIf="!input?.value" class="vdl-permanent-placeholder vdl-autocomplete-search">
+        Search...
+      </div>
+
+      <input vdlInput #input [vdlAutocomplete]="tdAuto" [(ngModel)]="currentState"
+             (ngModelChange)="this.tdStates = filterStates(currentState)"
+             (autocompleteOptionEvent)="handleOptionEvent($event)">
+    </vdl-input-container>
+
+    <vdl-autocomplete #tdAuto="vdlAutocomplete" [yOffset]="9">
+      <vdl-option *ngFor="let state of tdStates" (click)="handleOptionEvent($event)"
+                  [value]="state.name"
+                  [highlightText]="inputValue">
+      </vdl-option>
+    </vdl-autocomplete>
+  </div>-->
+
+  <vdl-top-bar-actions>
+    <div class="vdl-top-bar-divider"></div>
+    <!--<button vdl-icon-button (click)="alert('Alert icon clicked!')">
+      <vdl-icon fontSet="fontawesome" fontIcon="fa-bell"></vdl-icon>
+    </button>-->
+    <button vdl-icon-button
+            (click)="openConfluencePage()">
+      <vdl-icon fontSet="fontawesome"
+                fontIcon="fa-question"></vdl-icon>
+    </button>
+    <button id="user__menu"
+            vdl-icon-button
+            [vdlMenuTriggerFor]="menu"
+            *ngIf="menuStatus">
+      <!--<span class="fa-stack fa-2x">
+        <i class="fa fa-circle fa-stack-2x"></i>
+        <span class="fa fa-stack-1x">V</span>
+      </span>-->
+      <vdl-icon fontSet="fontawesome"
+                fontIcon="fa-smile-o fa-2x"></vdl-icon>
+    </button>
+    <vdl-menu [overlapTrigger]="false"
+              yPosition="below"
+              #menu="vdlMenu">
+      <button vdl-menu-item
+              (click)="GetToken()"
+              [disabled]="dialogRef">
+        <vdl-icon fontSet="fontawesome"
+                  fontIcon="fa-key"></vdl-icon>Get token
+      </button>
+      <button vdl-menu-item
+              (click)="OnLogout()">
+        <vdl-icon fontSet="fontawesome"
+                  fontIcon="fa-sign-out"></vdl-icon>Logout
+      </button>
+    </vdl-menu>
+  </vdl-top-bar-actions>
+</vdl-top-bar>
+
+<div class="app-body">
+  <!--
+  <div class="app-sidenav" *ngIf="menuStatus">
+    <vdl-sidenav [selectedCategory]="selectedCategory"
+                 [categoryList]="categories"
+                 (categorySelected)="onCategorySelect($event)">
+    </vdl-sidenav>
+  </div>
+  -->
+  <div class="app-content">
+    <router-outlet></router-outlet>
+  </div>
+
+</div>

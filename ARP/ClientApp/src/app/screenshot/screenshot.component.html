@@ -1,0 +1,294 @@
+<vdl-accordion>
+	<vdl-expansion-panel expanded=true>
+
+		<vdl-expansion-panel-header>
+			<vdl-panel-title>Select items to compare</vdl-panel-title>
+		</vdl-expansion-panel-header>
+		<div class="container"
+		     fxLayout
+		     fxLayout.xs="column"
+		     fxLayoutAlign="start center"
+		     fxLayoutGap="10px"
+		     fxLayoutGap.xs="0">
+			<div>
+				<vdl-form-field>
+					<vdl-label>Project</vdl-label>
+					<vdl-select placeholder="Select project"
+					            [(ngModel)]="currentProjectName"
+					            (ngModelChange)="getBuilds($event)">
+						<vdl-option *ngFor="let project of projects"
+						            [value]="project.projectName">
+							{{project.projectName}}
+						</vdl-option>
+					</vdl-select>
+				</vdl-form-field>
+			</div>
+			<div>
+				<vdl-icon fontSet="fontawesome"
+				          fontIcon="fa-angle-double-right"
+				          class="fa-2x"></vdl-icon>
+			</div>
+			<div>
+				<vdl-form-field>
+					<vdl-label>Left Build</vdl-label>
+					<vdl-select placeholder="Select build"
+					            [(ngModel)]="currentBuildIdLeft"
+					            (ngModelChange)="getLocalesLeft(currentProjectName, $event)">
+						<vdl-option *ngFor="let build of builds"
+						            [value]="build.id">
+							{{build.buildName}}
+						</vdl-option>
+					</vdl-select>
+				</vdl-form-field>
+			</div>
+			<div>
+				<vdl-form-field>
+					<vdl-label>Left Locale</vdl-label>
+					<vdl-select placeholder="Select locale"
+					            [(ngModel)]="currentLocaleLeft"
+					            (ngModelChange)="getImages(currentProjectName, $event, currentBuildIdLeft, 'LEFT')">
+						<vdl-option *ngFor="let localeInfo of languagesLeft"
+						            [value]="localeInfo.localeCode">
+							{{localeInfo.localeName}}
+						</vdl-option>
+					</vdl-select>
+				</vdl-form-field>
+			</div>
+			<div>
+				<vdl-icon fontSet="fontawesome"
+				          fontIcon="fa-arrow-circle-right"
+				          class="fa-2x"></vdl-icon>
+			</div>
+			<div>
+				<vdl-form-field>
+					<vdl-label>Right Build</vdl-label>
+					<vdl-select placeholder="Select build"
+					            [(ngModel)]="currentBuildIdRight"
+					            (ngModelChange)="getLocalesRight(currentProjectName, $event)">
+						<vdl-option *ngFor="let build of builds"
+						            [value]="build.id">
+							{{build.buildName}}
+						</vdl-option>
+					</vdl-select>
+				</vdl-form-field>
+			</div>
+
+			<div>
+				<vdl-form-field>
+					<vdl-label>Right Locale</vdl-label>
+					<vdl-select placeholder="Select locale"
+					            [(ngModel)]="currentLocaleRight"
+					            (ngModelChange)="getImages(currentProjectName, $event, currentBuildIdRight, 'RIGHT')">
+						<vdl-option *ngFor="let localeInfo of languagesRight"
+						            [value]="localeInfo.localeCode">
+							{{localeInfo.localeName}}
+						</vdl-option>
+					</vdl-select>
+				</vdl-form-field>
+			</div>
+		</div>
+	</vdl-expansion-panel>
+</vdl-accordion>
+
+<div class="container"
+     fxLayout
+     fxLayout.xs="column"
+     fxLayoutAlign="start center"
+     fxLayoutGap="10px"
+     fxLayoutGap.xs="0">
+	<ngx-loading [show]="sliderLoadingShow"></ngx-loading>
+	<vdl-slide-toggle [(ngModel)]="sliderControler"
+	                  (change)="onThresholdEnableChange($event)"
+	                  [disabled]="sliderToggleDisabled"></vdl-slide-toggle>
+	&nbsp;
+	<strong>Diff threshold:&nbsp;</strong>
+	<vdl-slider [disabled]="sliderIsDisabled"
+	            min="0"
+	            tickInterval="1"
+	            max="0.1"
+	            step="0.002"
+	            [(ngModel)]="screenshotDiff"
+	            (change)="onDiffChange()"></vdl-slider>
+	<!-- <input style="width:40px" vdlInput placeholder="difference percent" (change)="onDiffPercentChange()" [(ngModel)]="diffPercent">% -->
+	<vdl-form-field style="width:80px"
+	                align="end"
+	                label="Threshold">
+		<input vdlInput
+		       placeholder="Percent"
+		       id="threshold_value_input"
+		       (change)="onDiffPercentChange()"
+		       [(ngModel)]="diffPercent"
+		       vdlInput>
+		<span vdlSuffix>%</span>
+	</vdl-form-field>
+	<div *ngIf="currentComparison != null">
+		&nbsp;
+		<strong>Current difference:</strong> {{currentComparison.difference | percent}}
+	</div>
+	<div>
+		<button vdl-secondary-button
+		        (click)="onDownload()">Download</button>
+	</div>
+</div>
+<div class="container"
+     fxLayout
+     fxLayout.xs="column"
+     fxLayoutAlign="center center"
+     fxLayoutGap="10px"
+     fxLayoutGap.xs="0">
+	<div fxFlex="35%">
+		<vdl-form-field>
+			<vdl-label>Screens ({{ filteredScreenNo }} of {{ totalScreenNo }})</vdl-label>
+			<vdl-select placeholder="Select screen"
+			            [(ngModel)]="currentScreenName"
+			            (ngModelChange)="updateImages($event)">
+				<vdl-option *ngFor="let screen of screenNames"
+				            [value]="screen">
+					{{ screen }}
+				</vdl-option>
+			</vdl-select>
+		</vdl-form-field>
+	</div>
+	<div fxFlex="30%"
+	     fxLayoutAlign="end center">
+		<p></p>
+
+		<button vdl-secondary-button
+		        (click)="moveCurrentImage(-1)">Previous</button>&nbsp;
+		<button vdl-secondary-button
+		        (click)="moveCurrentImage(1)">Next</button>&nbsp;
+		<button vdl-secondary-button
+		        (click)="imageSize(-5)">
+			<vdl-icon vdl-list-icon
+			          fontSet="fontawesome"
+			          fontIcon="fa-search-minus"></vdl-icon>
+		</button>
+		&nbsp;{{scale}}%&nbsp;
+		<button vdl-secondary-button
+		        (click)="imageSize(5)">
+			<vdl-icon vdl-list-icon
+			          fontSet="fontawesome"
+			          fontIcon="fa-search-plus"></vdl-icon>
+		</button>
+	</div>
+	<div fxFlex
+	     fxLayoutAlign="start center">
+		&nbsp;
+		<vdl-checkbox [checked]="fitTheScreen"
+		              (change)="resetZoom($event)"
+		              [label]="'Fit'">
+			<vdl-popover-predefined popoverType="info"
+			                        popoverPlacement="right"
+			                        popoverTitle="Fit to screen">
+				Will align the screen shot sizes to fit into the browser screen.
+			</vdl-popover-predefined>
+		</vdl-checkbox>
+		&nbsp;
+		<vdl-checkbox [checked]="showOverylay"
+		              (change)="overlayChange($event)"
+		              [label]="'Overlay'">
+			<vdl-popover-predefined popoverType="info"
+			                        popoverPlacement="right"
+			                        popoverTitle="Display overlay">
+				Will overlay the image highlighting the changes between the selected screens on the right screenshot.
+			</vdl-popover-predefined>
+		</vdl-checkbox>
+		&nbsp;
+		<vdl-checkbox [checked]="displayEnglish"
+		              (change)="flipEnglishDisplay($event)"
+		              [label]="'Flip English'">
+			<vdl-popover-predefined popoverType="info"
+			                        popoverPlacement="right"
+			                        popoverTitle="Flip to English">
+				The left image will display the English screenshot corresponding to the right image.
+			</vdl-popover-predefined>
+		</vdl-checkbox>
+	</div>
+</div>
+<div class="containerX">
+	<div #comparer
+	     class="container"
+	     fxLayout
+	     fxLayout.xs="column"
+	     fxLayoutAlign="center center"
+	     fxLayoutGap="10px"
+	     fxLayoutGap.xs="0">
+		<div fxFlex="50%">
+			<vdl-icon *ngIf="leftImagePath==null"
+			          svgIcon="no-picture"
+			          class="fa-4x"></vdl-icon>
+			<div *ngIf="leftImagePath!=null"
+			     [style.position]="'relative'"
+			     [style.height]="leftImageHeight*scale/100+'px'">
+				<div class="garbImage">
+					<div *ngIf="displayEnglish==false">
+						<img #leftImage
+						     id="leftImage"
+						     class="zoomicon"
+						     src="{{leftImagePath}}"
+						     (click)="viewLargeImage(leftImagePath)"
+						     (load)="imageLoaded($event)"
+						     [style.height]="leftImageHeight*scale/100+'px'"
+						     [style.width]="leftImageWidth*scale/100+'px'" />
+					</div>
+					<div *ngIf="displayEnglish==true">
+						<img #leftImage
+						     id="sourceImage"
+						     class="zoomicon"
+						     src="{{sourceImagePath}}"
+						     (click)="viewLargeImage(sourceImagePath)"
+						     (load)="imageLoaded($event)"
+						     [style.height]="sourceImageHeight*scale/100+'px'"
+						     [style.width]="sourceImageWidth*scale/100+'px'" />
+					</div>
+				</div>
+			</div>
+		</div>
+		<div fxFlex="50%">
+			<vdl-icon *ngIf="rightImagePath==null"
+			          svgIcon="no-picture"
+			          class="fa-4x"></vdl-icon>
+			<div *ngIf="rightImagePath!=null"
+			     [style.position]="'relative'"
+			     [style.height]="overlayImageHeight*scale/100+'px'">
+				<div class="garbImage">
+					<img #rightImage
+					     id="rightImage"
+					     class="zoomicon"
+					     src="{{rightImagePath}}"
+					     (click)="viewLargeImage(rightImagePath)"
+					     (load)="imageLoaded($event)"
+					     [style.height]="rightImageHeight*scale/100+'px'"
+					     [style.width]="rightImageWidth*scale/100+'px'" />
+				</div>
+				<div class="garbImage garbOverlay"
+				     [hidden]="!showOverylay || comparisonImagePath==null">
+					<img #rightImageOverlay
+					     class="zoomicon"
+					     src="{{comparisonImagePath}}"
+					     (click)="viewLargeImage(rightImagePath)"
+					     [style.height]="overlayImageHeight*scale/100+'px'"
+					     [style.width]="overlayImageWidth*scale/100+'px'" />
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="container"
+	     fxLayout
+	     fxLayout.xs="column"
+	     fxLayoutAlign="center start"
+	     fxLayoutGap="10px"
+	     fxLayoutGap.xs="0">
+		<div fxFlex="50%">
+			<app-issues [projectName]="currentProjectName"
+			            [screenName]="currentScreenName"
+			            [locale]="currentLocaleLeft"></app-issues>
+		</div>
+		<div fxFlex="50%">
+			<app-issues [projectName]="currentProjectName"
+			            [screenName]="currentScreenName"
+			            [locale]="currentLocaleRight"></app-issues>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ARP</name>
+    </assembly>
+    <members>
+        <member name="T:garb.Controllers.IssuesController">
+            <summary>
+            Controller for managing Issues
+            </summary>
+        </member>
+        <member name="M:garb.Controllers.IssuesController.#ctor(garb.Data.GarbContext,AutoMapper.IMapper)">
+            <summary>
+            Constructor for issues controller
+            </summary>
+            <param name="context"></param>
+            <param name="mapper"></param>
+        </member>
+        <member name="M:garb.Controllers.IssuesController.Get(System.String,System.Guid)">
+            <summary>
+            Get issue details
+            </summary>
+            <param name="project">Project name</param>
+            <param name="id">Issue identifier</param>
+            <returns>JSON with issue details</returns>
+        </member>
+        <member name="M:garb.Controllers.IssuesController.Get(System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Get all issues assigned to selected screen
+            </summary>
+            <param name="project">Project name</param>
+            <param name="name">Screen name</param>
+            <param name="locale">Locale code</param>
+            <param name="onlyactive">true: Return issues only in active state (default), false: all issues</param>
+            <returns>List of issues</returns>
+        </member>
+        <member name="M:garb.Controllers.IssuesController.Put(System.String,System.Guid,garb.Dto.IssueDto)">
+            <summary>
+            Update Issue details based on issue identifier
+            </summary>
+            <param name="project">Project name</param>
+            <param name="id">Issue id</param>
+            <param name="issueData">JSON containg updated issue</param>
+            <returns>Paht to issue details</returns>
+        </member>
+        <member name="M:garb.Controllers.IssuesController.Post(System.String,System.String,System.String,System.String,garb.Dto.CreateIssueDto)">
+            <summary>
+            Add issue to screen
+            </summary>
+            <param name="project">Project name</param>
+            <param name="name">Screen name</param>
+            <param name="locale">Locale code</param>
+            <param name="build">Build name or identifier</param>
+            <param name="issueData">Issue to add (JSON)</param>
+            <returns>Path to issue details</returns>
+        </member>
+        <member name="M:garb.Controllers.IssuesController.Put(System.String,System.String,System.String,System.String,garb.Dto.CreateIssueDto)">
+            <summary>
+            Update or create an issue
+            </summary>
+            <param name="project">Project name</param>
+            <param name="name">Screen name</param>
+            <param name="locale">Locale code</param>
+            <param name="build">Build name or identifier</param>
+            <param name="issueData">Issue to add or update (JSON)</param>
+            <returns>Path to issue details</returns>
+        </member>
+        <member name="T:garb.Helpers.SwaggerDefaultValues">
+            <summary>
+            Represents the Swagger/Swashbuckle operation filter used to document the implicit API version parameter.
+            </summary>
+            <remarks>This <see cref="T:Swashbuckle.AspNetCore.SwaggerGen.IOperationFilter"/> is only required due to bugs in the <see cref="T:Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator"/>.
+            Once they are fixed and published, this class can be removed.</remarks>
+        </member>
+        <member name="M:garb.Helpers.SwaggerDefaultValues.Apply(Swashbuckle.AspNetCore.Swagger.Operation,Swashbuckle.AspNetCore.SwaggerGen.OperationFilterContext)">
+            <summary>
+            Applies the filter to the specified operation using the given context.
+            </summary>
+            <param name="operation">The operation to apply the filter to.</param>
+            <param name="context">The current operation filter context.</param>
+        </member>
+    </members>
+</doc>
