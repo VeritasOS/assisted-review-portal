@@ -1,0 +1,24 @@
+<vdl-login title="{{title}}" subtitle="{{subtitle}}">
+  <vdl-icon vdl-login-icon class="vdl-login-icon" svgIcon="simple-globe"></vdl-icon>
+  <form (submit)="_submitForm($event);">
+    <vdl-form-field label="Username">
+      <input vdlInput [(ngModel)]="username" name="username">
+    </vdl-form-field>
+
+    <vdl-form-field class="password" label="Password">
+      <input vdlInput type="password" [(ngModel)]="password" name="password">
+      <vdl-suffix [iconPassword]="true"></vdl-suffix>
+      <vdl-hint>Community credentials</vdl-hint>
+    </vdl-form-field>
+        <button vdl-primary-button
+            [ngClass]="{'btn-loading': submitButtonLoading}"
+            class="login-form-submit-button"
+            type="submit"
+    >{{submitButtonLabel}}
+    </button>
+    <div [hidden]="false" class="errorMessage">
+      {{ errorMessage }}
+    </div>
+  </form>
+</vdl-login>
+<br>

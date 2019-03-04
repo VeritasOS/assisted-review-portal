@@ -1,0 +1,21 @@
+<div *ngIf="noIssues">No issues</div>
+<div *ngIf="!noIssues">
+	<vdl-list>
+		<vdl-list-item *ngFor="let issue of issues; let i = index" [isInline]="false" [wrapTextContent]="true" [isSelectable]="false"
+		 [disabled]="false">
+
+			<div vdl-line [style.text-decoration]="issue.status != IssueStatus.Active ? 'line-through': ''">{{IssueType[issue.type]}}</div>
+			<div vdl-line [style.text-decoration]="issue.status != IssueStatus.Active ? 'line-through': ''">{{issue.text}}</div>
+
+			<vdl-list-item-action>
+				<div class="vdl-list-item-action-gradient"></div>
+				<button vdl-icon-button>
+					<vdl-icon vdl-list-icon fontSet="fontawesome" fontIcon="fa-pencil"></vdl-icon>
+				</button>
+				<button vdl-icon-button>
+					<vdl-icon vdl-list-icon fontSet="fontawesome" fontIcon="fa-check"></vdl-icon>
+				</button>
+			</vdl-list-item-action>
+		</vdl-list-item>
+	</vdl-list>
+</div>

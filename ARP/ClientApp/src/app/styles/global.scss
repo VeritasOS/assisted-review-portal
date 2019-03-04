@@ -1,0 +1,13 @@
+/* this file will be extracted to main dist folder and is imported in index.html */
+/* This file is for setting global styles  */
+@import '~font-awesome/css/font-awesome.css';
+@import '~vdl-angular/flexboxgrid/flexboxgrid.min.css';
+@import '~vdl-angular/prebuilt-themes/deeppurple-amber.css';
+@import '~vdl-angular/prebuilt-themes/vdl-global.css';
+
+.app-root {
+    flex: 1 1 auto;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
