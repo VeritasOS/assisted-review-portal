@@ -29,17 +29,19 @@ namespace garb.Authentication
 {
 	public class LdapHelper
 	{
+		public static string LdapDomain;
+
 		public static bool ValidateDomainCredentials(UnitOfWork _unitOfWork, string username, string password)
 		{
-			string domainName = "community.veritas.com";
-			string userDn = $"{username}@{domainName}";
+			//string domainName =  ;
+			string userDn = $"{username}@{LdapDomain}";
 
 			try
 			{
 				// Using Novell LdapConnection instead of unsupported System.Directory services
 				using (var connection = new LdapConnection { SecureSocketLayer = false })
 				{
-					connection.Connect(domainName, LdapConnection.DEFAULT_PORT);
+					connection.Connect(LdapDomain, LdapConnection.DEFAULT_PORT);
 					connection.Bind(userDn, password);
 
 					if (connection.Bound)
