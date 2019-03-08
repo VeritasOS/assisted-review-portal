@@ -31,6 +31,14 @@ steps:
   workingDirectory: 'arp-uploader'
   displayName: 'npm publish --dry-run'
 
+- script: |
+    docker build -t $(dockerId)/$(imageName) .
+  displayName: 'docker build'
+
+- script: |
+    docker push $(dockerId)/$(imageName)
+  displayName: 'docker push'
+
 - task: PublishTestResults@2
   condition: succeededOrFailed()
   inputs:

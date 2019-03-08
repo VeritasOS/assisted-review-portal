@@ -2,6 +2,7 @@ version: "3"
 services:
     web:
         build: .
+        image: apoblock/arp:firsttry
         ports:
             - "8000:80"
         depends_on:
