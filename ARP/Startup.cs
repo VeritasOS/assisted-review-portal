@@ -40,6 +40,7 @@ using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
 using System.IO;
 using System.Text;
+using garb.Authentication;
 
 namespace garb
 {
@@ -134,6 +135,8 @@ namespace garb
 
 			// Added - Confirms that we have a home for our DemoSettings
 			services.Configure<StorageHelper>(Configuration.GetSection("StorageHelperSettings"));
+
+			services.Configure<LdapHelper>(Configuration.GetSection("StorageHelperSettings"));
 
 			//call this in case you need aspnet-user-authtype/aspnet-user-identity
 			//services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -237,6 +240,8 @@ namespace garb
 
 
 			StorageHelper.StorageRootFolder = Configuration.GetSection("StorageHelperSettings").GetValue<string>("StorageRootFolder");
+
+			LdapHelper.LdapDomain = Configuration.GetSection("Authentication").GetValue<string>("LdapDomain");
 
 			DbInitializer.Initialize(context);
 		}

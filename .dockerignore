@@ -1,0 +1,6 @@
+**/bin/
+**/obj/
+**/out/
+**/node_modules/
+/arp-uploader
+**/appsettings.Development.json
