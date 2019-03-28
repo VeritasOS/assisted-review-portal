@@ -30,42 +30,73 @@ namespace garb.Authentication
 	public class LdapHelper
 	{
 		public static string LdapDomain;
+        public static string LocalAdminName;
+        public static string LocalAdminPwd;
+        public static string LocalReadOnlyName;
+        public static string LocalReadOnlyPwd;
 
-		public static bool ValidateDomainCredentials(UnitOfWork _unitOfWork, string username, string password)
+        public static bool ValidateDomainCredentials(UnitOfWork _unitOfWork, string username, string password)
 		{
-			//string domainName =  ;
-			string userDn = $"{username}@{LdapDomain}";
+            if (username.Equals(LocalAdminName) && password.Equals(LocalAdminPwd) ||
+                username.Equals(LocalReadOnlyName) && password.Equals(LocalReadOnlyPwd))
+            {
+                var userRepo = _unitOfWork.UserRepository;
 
-			try
-			{
-				// Using Novell LdapConnection instead of unsupported System.Directory services
-				using (var connection = new LdapConnection { SecureSocketLayer = false })
-				{
-					connection.Connect(LdapDomain, LdapConnection.DEFAULT_PORT);
-					connection.Bind(userDn, password);
+                var user = userRepo.GetByID(username);
 
-					if (connection.Bound)
-					{
-						var userRepo = _unitOfWork.UserRepository;
+                if (user == null)
+                {
+                    User newUser = new User() { UserName = username };
+                    userRepo.Insert(newUser);
+                    _unitOfWork.Save();
+                }
 
-						var user = userRepo.GetByID(username);
+                return true;
+            }
 
-						if (user == null)
-						{
-							User newUser = new User() { UserName = username };
-							userRepo.Insert(newUser);
-							_unitOfWork.Save();
-						}
+            //string domainName =  ;
+            string userDn = $"{username}@{LdapDomain}";
 
-						return true;
-					}
-				}
-			}
-			finally
-			{
-			}
+            try
+            {
+                // Using Novell LdapConnection instead of unsupported System.Directory services
+                using (var connection = new LdapConnection { SecureSocketLayer = false })
+                {
+                    connection.Connect(LdapDomain, LdapConnection.DEFAULT_PORT);
+                    connection.Bind(userDn, password);
 
-			return false;
-		}
-	}
+                    if (connection.Bound)
+                    {
+                        var userRepo = _unitOfWork.UserRepository;
+
+                        var user = userRepo.GetByID(username);
+
+                        if (user == null)
+                        {
+                            User newUser = new User() { UserName = username };
+                            userRepo.Insert(newUser);
+                            _unitOfWork.Save();
+                        }
+
+                        return true;
+                    }
+                }
+            }
+            catch
+            {
+            }
+
+            return false;
+        }
+
+        public static bool CanWrite(string username)
+        {
+            if (username != LocalReadOnlyName)
+            {
+                return true;
+            }
+
+            return false;
+        }
+    }
 }
