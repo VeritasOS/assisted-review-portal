@@ -37,56 +37,62 @@ namespace garb.Authentication
 
         public static bool ValidateDomainCredentials(UnitOfWork _unitOfWork, string username, string password)
 		{
-            if (username.Equals(LocalAdminName) && password.Equals(LocalAdminPwd) ||
-                username.Equals(LocalReadOnlyName) && password.Equals(LocalReadOnlyPwd))
-            {
-                var userRepo = _unitOfWork.UserRepository;
-
-                var user = userRepo.GetByID(username);
-
-                if (user == null)
-                {
-                    User newUser = new User() { UserName = username };
-                    userRepo.Insert(newUser);
-                    _unitOfWork.Save();
-                }
-
-                return true;
-            }
-
-            //string domainName =  ;
-            string userDn = $"{username}@{LdapDomain}";
-
             try
             {
-                // Using Novell LdapConnection instead of unsupported System.Directory services
-                using (var connection = new LdapConnection { SecureSocketLayer = false })
+                if (!string.IsNullOrEmpty(username) || !string.IsNullOrEmpty(password))
                 {
-                    connection.Connect(LdapDomain, LdapConnection.DEFAULT_PORT);
-                    connection.Bind(userDn, password);
-
-                    if (connection.Bound)
+                    // Workaround for Local Admin
+                    if (username.Equals(LocalAdminName) && password.Equals(LocalAdminPwd))
                     {
-                        var userRepo = _unitOfWork.UserRepository;
-
-                        var user = userRepo.GetByID(username);
-
-                        if (user == null)
-                        {
-                            User newUser = new User() { UserName = username };
-                            userRepo.Insert(newUser);
-                            _unitOfWork.Save();
-                        }
-
+                        CreateRepro(_unitOfWork, username, password);
                         return true;
                     }
-                }
-            }
-            catch
-            {
-            }
 
-            return false;
+                    // Workaround for Local User (with read only access)
+                    if (username.Equals(LocalReadOnlyName) && password.Equals(LocalReadOnlyPwd))
+                    {
+                        CreateRepro(_unitOfWork, username, password);
+                        return true;
+                    }
+
+                    // Veritas AD User
+                    string userDn = $"{username}@{LdapDomain}";
+
+                    // Using Novell LdapConnection instead of unsupported System.Directory services
+                    using (var connection = new LdapConnection { SecureSocketLayer = false })
+                    {
+                        connection.Connect(LdapDomain, LdapConnection.DEFAULT_PORT);
+                        connection.Bind(userDn, password);
+
+                        if (connection.Bound)
+                        {
+                            CreateRepro(_unitOfWork, username, password);
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("ERROR: " + ex.Message);
+                return false;
+            }
+        }
+
+        public static void CreateRepro(UnitOfWork _unitOfWork, string username, string password)
+        {
+            var userRepo = _unitOfWork.UserRepository;
+
+            var user = userRepo.GetByID(username);
+
+            if (user == null)
+            {
+                User newUser = new User() { UserName = username };
+                userRepo.Insert(newUser);
+                _unitOfWork.Save();
+            }
         }
 
         public static bool CanWrite(string username)
