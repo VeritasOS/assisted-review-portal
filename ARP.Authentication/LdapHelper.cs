@@ -39,7 +39,7 @@ namespace garb.Authentication
 		{
             try
             {
-                if (!string.IsNullOrEmpty(username) || !string.IsNullOrEmpty(password))
+                if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
                 {
                     // Workaround for Local Admin
                     if (username.Equals(LocalAdminName) && password.Equals(LocalAdminPwd))
