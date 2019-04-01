@@ -113,7 +113,13 @@ namespace garb.Controllers
 
 			string currentUser = User.Identity.Name;
 
-			try
+            // Workaround for local readonly user
+            if (!Authentication.LdapHelper.CanWrite(currentUser))
+            {
+                return Unauthorized();
+            }
+
+            try
 			{
 				Guid buildId;
 

@@ -136,7 +136,7 @@ namespace garb
 			// Added - Confirms that we have a home for our DemoSettings
 			services.Configure<StorageHelper>(Configuration.GetSection("StorageHelperSettings"));
 
-			services.Configure<LdapHelper>(Configuration.GetSection("StorageHelperSettings"));
+			services.Configure<LdapHelper>(Configuration.GetSection("Authentication"));
 
 			//call this in case you need aspnet-user-authtype/aspnet-user-identity
 			//services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -242,8 +242,12 @@ namespace garb
 			StorageHelper.StorageRootFolder = Configuration.GetSection("StorageHelperSettings").GetValue<string>("StorageRootFolder");
 
 			LdapHelper.LdapDomain = Configuration.GetSection("Authentication").GetValue<string>("LdapDomain");
+            LdapHelper.LocalAdminName = Configuration.GetSection("Authentication").GetValue<string>("LocalAdminName");
+            LdapHelper.LocalAdminPwd = Configuration.GetSection("Authentication").GetValue<string>("LocalAdminPwd");
+            LdapHelper.LocalReadOnlyName = Configuration.GetSection("Authentication").GetValue<string>("LocalReadOnlyName");
+            LdapHelper.LocalReadOnlyPwd = Configuration.GetSection("Authentication").GetValue<string>("LocalReadOnlyPwd");
 
-			DbInitializer.Initialize(context);
+            DbInitializer.Initialize(context);
 		}
 
 	}

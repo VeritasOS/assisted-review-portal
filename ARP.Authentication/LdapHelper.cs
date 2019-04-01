@@ -30,42 +30,79 @@ namespace garb.Authentication
 	public class LdapHelper
 	{
 		public static string LdapDomain;
+        public static string LocalAdminName;
+        public static string LocalAdminPwd;
+        public static string LocalReadOnlyName;
+        public static string LocalReadOnlyPwd;
 
-		public static bool ValidateDomainCredentials(UnitOfWork _unitOfWork, string username, string password)
+        public static bool ValidateDomainCredentials(UnitOfWork _unitOfWork, string username, string password)
 		{
-			//string domainName =  ;
-			string userDn = $"{username}@{LdapDomain}";
+            try
+            {
+                if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
+                {
+                    // Workaround for Local Admin
+                    if (username.Equals(LocalAdminName) && password.Equals(LocalAdminPwd))
+                    {
+                        CreateRepro(_unitOfWork, username, password);
+                        return true;
+                    }
 
-			try
-			{
-				// Using Novell LdapConnection instead of unsupported System.Directory services
-				using (var connection = new LdapConnection { SecureSocketLayer = false })
-				{
-					connection.Connect(LdapDomain, LdapConnection.DEFAULT_PORT);
-					connection.Bind(userDn, password);
+                    // Workaround for Local User (with read only access)
+                    if (username.Equals(LocalReadOnlyName) && password.Equals(LocalReadOnlyPwd))
+                    {
+                        CreateRepro(_unitOfWork, username, password);
+                        return true;
+                    }
 
-					if (connection.Bound)
-					{
-						var userRepo = _unitOfWork.UserRepository;
+                    // Veritas AD User
+                    string userDn = $"{username}@{LdapDomain}";
 
-						var user = userRepo.GetByID(username);
+                    // Using Novell LdapConnection instead of unsupported System.Directory services
+                    using (var connection = new LdapConnection { SecureSocketLayer = false })
+                    {
+                        connection.Connect(LdapDomain, LdapConnection.DEFAULT_PORT);
+                        connection.Bind(userDn, password);
 
-						if (user == null)
-						{
-							User newUser = new User() { UserName = username };
-							userRepo.Insert(newUser);
-							_unitOfWork.Save();
-						}
+                        if (connection.Bound)
+                        {
+                            CreateRepro(_unitOfWork, username, password);
+                            return true;
+                        }
+                    }
+                }
 
-						return true;
-					}
-				}
-			}
-			finally
-			{
-			}
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("ERROR: " + ex.Message);
+                return false;
+            }
+        }
 
-			return false;
-		}
-	}
+        public static void CreateRepro(UnitOfWork _unitOfWork, string username, string password)
+        {
+            var userRepo = _unitOfWork.UserRepository;
+
+            var user = userRepo.GetByID(username);
+
+            if (user == null)
+            {
+                User newUser = new User() { UserName = username };
+                userRepo.Insert(newUser);
+                _unitOfWork.Save();
+            }
+        }
+
+        public static bool CanWrite(string username)
+        {
+            if (username != LocalReadOnlyName)
+            {
+                return true;
+            }
+
+            return false;
+        }
+    }
 }
