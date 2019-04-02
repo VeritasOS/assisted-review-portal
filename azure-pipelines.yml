@@ -35,11 +35,6 @@ steps:
     docker build -t $(dockerId)/$(imageName) .
   displayName: 'docker build'
 
-- script: |
-    docker login -u $(dockerId) -p $(dockerPswd)
-    docker push $(dockerId)/$(imageName)
-  displayName: 'docker push'
-
 - task: PublishTestResults@2
   condition: succeededOrFailed()
   inputs:
@@ -51,6 +46,12 @@ steps:
     codeCoverageTool: Cobertura
     summaryFileLocation: '$(System.DefaultWorkingDirectory)/arp-uploader/coverage/cobertura-coverage.xml'
     reportDirectory: '$(System.DefaultWorkingDirectory)/arp-uploader/coverage'
+
+- script: |
+    docker login -u $(dockerId) -p $(dockerPswd)
+    docker push $(dockerId)/$(imageName)
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  displayName: 'docker push'
 
 #- task: Npm@1
 #  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
