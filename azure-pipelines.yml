@@ -36,6 +36,7 @@ steps:
   displayName: 'docker build'
 
 - script: |
+    docker login -u $(dockerId) -p $(dockerPswd)
     docker push $(dockerId)/$(imageName)
   displayName: 'docker push'
 
