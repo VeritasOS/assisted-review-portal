@@ -147,8 +147,8 @@ export class AppComponent implements OnInit {
   }
 
 
-  public openConfluencePage() {
-    window.open('https://confluence.community.veritas.com/pages/viewpage.action?pageId=128370890');
+  public openSupportPage() {
+    window.open('https://github.com/VeritasOS/assisted-review-portal');
   }
 
   public GetToken() {
