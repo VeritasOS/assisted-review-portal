@@ -53,9 +53,9 @@ steps:
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   displayName: 'docker push'
 
-#- task: Npm@1
-#  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-#  inputs:
-#    command: publish
-#    publishEndpoint: 'npmjs'
-#    workingDir: 'arp-uploader'
+- task: Npm@1
+  condition: and(succeeded(), and(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['publishNpm'], 'true')))
+  inputs:
+    command: publish
+    publishEndpoint: 'npmjs'
+    workingDir: 'arp-uploader'
