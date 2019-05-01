@@ -1,6 +1,6 @@
 {
 	"name": "arp-uploader",
-	"version": "1.1.12",
+	"version": "1.1.13",
 	"description": "Assisted Review Portal Uploader",
 	"license": "MIT",
 	"main": "built/lib/lib.js",
