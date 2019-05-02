@@ -10,3 +10,4 @@ arp-*.tgz
 .DS_Store
 .nyc_output
 junitresults.xml
+!bin
