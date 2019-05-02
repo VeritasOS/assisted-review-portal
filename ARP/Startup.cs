@@ -241,8 +241,9 @@ namespace garb
 
 			StorageHelper.StorageRootFolder = Configuration.GetSection("StorageHelperSettings").GetValue<string>("StorageRootFolder");
 
+			LdapHelper.LdapServer = Configuration.GetSection("Authentication").GetValue<string>("LdapServer");
 			LdapHelper.LdapDomain = Configuration.GetSection("Authentication").GetValue<string>("LdapDomain");
-            LdapHelper.LocalAdminName = Configuration.GetSection("Authentication").GetValue<string>("LocalAdminName");
+			LdapHelper.LocalAdminName = Configuration.GetSection("Authentication").GetValue<string>("LocalAdminName");
             LdapHelper.LocalAdminPwd = Configuration.GetSection("Authentication").GetValue<string>("LocalAdminPwd");
             LdapHelper.LocalReadOnlyName = Configuration.GetSection("Authentication").GetValue<string>("LocalReadOnlyName");
             LdapHelper.LocalReadOnlyPwd = Configuration.GetSection("Authentication").GetValue<string>("LocalReadOnlyPwd");

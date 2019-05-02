@@ -29,6 +29,7 @@ namespace garb.Authentication
 {
 	public class LdapHelper
 	{
+		public static string LdapServer;
 		public static string LdapDomain;
         public static string LocalAdminName;
         public static string LocalAdminPwd;
@@ -61,7 +62,7 @@ namespace garb.Authentication
                     // Using Novell LdapConnection instead of unsupported System.Directory services
                     using (var connection = new LdapConnection { SecureSocketLayer = false })
                     {
-                        connection.Connect(LdapDomain, LdapConnection.DEFAULT_PORT);
+                        connection.Connect(LdapServer, LdapConnection.DEFAULT_PORT);
                         connection.Bind(userDn, password);
 
                         if (connection.Bound)
