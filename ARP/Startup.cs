@@ -63,6 +63,14 @@ namespace garb
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			// Loading AutoMapper Profile
+			var config = new AutoMapper.MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new GarbProfile());
+            });
+
+            var mapper = config.CreateMapper();
+
 			// Adding CORS
 			services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
 			{
