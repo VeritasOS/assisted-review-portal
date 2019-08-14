@@ -2,9 +2,10 @@ version: "3"
 services:
     web:
         build: .
-        image: apoblock/arp:firsttry
+        image: apoblock/arp:latest
         ports:
             - "8000:80"
+            - "2222:2222"
         depends_on:
             - db
     db:

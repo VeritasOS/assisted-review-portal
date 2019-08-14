@@ -35,20 +35,42 @@ COPY . ./
 
 WORKDIR /app/ARP.ImageComparison.Test
 RUN dotnet publish -c Release -o out
-RUN dotnet vstest out/ARP.ImageComparison.Test.dll --logger:"trx;LogFileName=ARP.ImageComparison.Test.trx" --ResultsDirectory:/TestResults
 
 WORKDIR /app/ARP.Tests
 RUN dotnet publish -c Release -o out
-RUN dotnet vstest out/ARP.Tests.dll --logger:"trx;LogFileName=ARP.Tests.trx" --ResultsDirectory:/TestResults
 
 # Build Web Aplication
 
 WORKDIR /app/ARP
 RUN dotnet publish -c Release -o out
 
+# Run tests
+WORKDIR /app/ARP.ImageComparison.Test
+RUN dotnet vstest out/ARP.ImageComparison.Test.dll --logger:"trx;LogFileName=ARP.ImageComparison.Test.trx" --ResultsDirectory:/TestResults
+
+WORKDIR /app/ARP.Tests
+RUN dotnet vstest out/ARP.Tests.dll --logger:"trx;LogFileName=ARP.Tests.trx" --ResultsDirectory:/TestResults
+
 # Build runtime image
 FROM microsoft/dotnet:aspnetcore-runtime
+
+# Setup SSHD
+
+ENV SSH_PASSWD "root:Docker!"
+RUN apt-get update \
+        && apt-get install -y --no-install-recommends dialog \
+        && apt-get update \
+  && apt-get install -y --no-install-recommends openssh-server \
+  && echo "$SSH_PASSWD" | chpasswd
+  
+COPY sshd_config /etc/ssh/sshd_config
+RUN mkdir -p /var/run/sshd
+
+# Copy web application
+
 WORKDIR /app
 COPY --from=build-env /app/ARP/out .
+
 RUN mkdir -p /arpstore
-ENTRYPOINT ["dotnet", "ARP.dll"]
+
+ENTRYPOINT ["/bin/bash", "-c", "/usr/sbin/sshd && dotnet ARP.dll"]
