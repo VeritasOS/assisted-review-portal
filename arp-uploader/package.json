@@ -1,6 +1,6 @@
 {
 	"name": "arp-uploader",
-	"version": "1.1.14",
+	"version": "1.1.15",
 	"description": "Assisted Review Portal Uploader",
 	"license": "MIT",
 	"main": "built/lib/lib.js",
@@ -28,23 +28,23 @@
 	},
 	"dependencies": {
 		"optimist": "^0.6.1",
-		"typed-rest-client": "^1.1.2"
+		"typed-rest-client": "^1.5.0"
 	},
 	"devDependencies": {
-		"@types/jasmine": "^3.3.9",
+		"@types/jasmine": "^3.4.0",
 		"@types/jasminewd2": "^2.0.6",
-		"@types/node": "^11.9.6",
+		"@types/node": "^12.7.1",
 		"@types/optimist": "0.0.29",
 		"dts-bundle-webpack": "^1.0.2",
-		"jasmine": "^3.3.1",
+		"jasmine": "^3.4.0",
 		"jasmine-reporters": "^2.3.2",
 		"jasmine-ts": "^0.3.0",
-		"nyc": "^14.0.0",
-		"ts-loader": "^5.3.3",
-		"ts-node": "^8.0.2",
-		"typescript": "^3.3.3333",
-		"webpack": "^4.29.6",
-		"webpack-cli": "^3.2.3",
+		"nyc": "^14.1.1",
+		"ts-loader": "^6.0.4",
+		"ts-node": "^8.3.0",
+		"typescript": "^3.5.3",
+		"webpack": "^4.39.2",
+		"webpack-cli": "^3.3.6",
 		"webpack-node-externals": "^1.7.2"
 	},
 	"engines": {
