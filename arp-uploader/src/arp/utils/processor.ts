@@ -195,7 +195,7 @@ async function checkBuild(baseUrl: string, requestOptions: rm.IRequestOptions, p
     console.log(restRes.statusCode, restRes.result);
 
     if (restRes.statusCode === 200 && restRes.result != null) {
-      let bld: garbInterface.IBuild = restRes.result.find(b => b.buildName === build);
+      let bld: garbInterface.IBuild = restRes.result.find(b => b.buildName == build);
 
       if (bld != null) {
         console.log("Build already exists.");
