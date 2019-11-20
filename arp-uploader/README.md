@@ -1,5 +1,7 @@
 # Assisted Review Portal Uploader
 
+[![npm version](https://badge.fury.io/js/arp-uploader.svg)](https://badge.fury.io/js/arp-uploader)
+
 ## Overview
 
 This tool allows you to upload screenshots (PNG) and issues (JSON) detected by the [Globalization Automation Library](https://www.npmjs.com/package/glob-auto-library) to the [Assisted Review Portal](https://github.com/VeritasOS/assisted-review-portal).
